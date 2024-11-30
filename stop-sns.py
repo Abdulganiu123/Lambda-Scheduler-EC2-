@@ -1,0 +1,46 @@
+import json
+import boto3
+
+def lambda_handler(event, context):
+    # Create an EC2 client
+    ec2_client = boto3.client('ec2')
+    sns_client = boto3.client('sns')
+
+    # Define the filtering criteria for the instances you want to stop
+    filters = [
+        {
+            'Name': 'tag:Environment',
+            'Values': ['Staging']  # Change 'test' to your desired tag value
+        },
+        {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }
+    ]
+
+    # Describe instances based on the filter
+    response = ec2_client.describe_instances(Filters=filters)
+
+    # List to hold instance IDs that will be stopped
+    instances_to_stop = []
+
+    # Loop through instances in the response
+    for reservation in response['Reservations']:
+        for instance in reservation['Instances']:
+            instances_to_stop.append(instance['InstanceId'])
+
+    # Stop instances if there are any
+    if instances_to_stop:
+        ec2_client.stop_instances(InstanceIds=instances_to_stop)
+        print(f'Stopped instances: {instances_to_stop}')
+
+        # Send a success message to SNS
+        sns_topic_arn = 'arn:aws:sns:us-east-1:329551316753:instancestopped'  
+        sns_message = f'Successfully stopped the following instances: {instances_to_stop}'
+        sns_client.publish(
+            TopicArn=sns_topic_arn,
+            Message=sns_message
+        )
+        print('Success message sent to SNS.')
+    else:
+        print('No running instances found to stop.') 
