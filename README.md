@@ -59,3 +59,7 @@ Create two scheduled EventBridge rules:
 Target input:
 ```json
 { "action": "stop" }
+
+Or
+
+{ "action": "start" }
