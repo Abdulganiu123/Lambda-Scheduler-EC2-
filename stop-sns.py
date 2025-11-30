@@ -35,7 +35,7 @@ def lambda_handler(event, context):
         print(f'Stopped instances: {instances_to_stop}')
 
         # Send a success message to SNS
-        sns_topic_arn = 'arn:aws:sns:us-east-1:329551316753:instancestopped'  
+        sns_topic_arn = 'arn:aws:sns:us-east-1:3xxxxxxxxxx:instancestopped'  
         sns_message = f'Successfully stopped the following instances: {instances_to_stop}'
         sns_client.publish(
             TopicArn=sns_topic_arn,
