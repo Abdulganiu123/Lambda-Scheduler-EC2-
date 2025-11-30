@@ -35,7 +35,7 @@ def lambda_handler(event, context):
         print(f'Started instances: {instances_to_start}')
 
         # Send a success message to SNS
-        sns_topic_arn = 'arn:aws:sns:us-east-1:329551316753:instancestopped'  # Replace with your SNS topic ARN
+        sns_topic_arn = 'arn:aws:sns:us-east-1:3295xxxxxxx:instancestopped'  # Replace with your SNS topic ARN
         sns_message = f'Successfully started the following instances: {instances_to_start}'
         sns_client.publish(
             TopicArn=sns_topic_arn,
